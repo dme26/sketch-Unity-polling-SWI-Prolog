@@ -1,23 +1,29 @@
 using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
+using System.Linq;
 
 // The JsonUtility parsing built into Unity requires a class target
 [System.Serializable]
-public class PrologResponse
+public class PrologIntermediary
 {
-    public string message;
-    public int[] numbers;
+    public int id;
+    public string name;
 }
+
+[System.Serializable]
+public class PrologIntermediaries
+{
+    public PrologIntermediary[] intermediaries;
+}
+
 
 public class PrologClient : MonoBehaviour
 {
     void Start()
     {
-        // URL of your Prolog server
-        string url = "http://localhost:8080/api/data";
-
-        // Start the coroutine to get data
+        // Prolog API server URL
+        string url = "http://localhost:8080/api/intermediaries";
         StartCoroutine(GetData(url));
     }
 
@@ -39,8 +45,8 @@ public class PrologClient : MonoBehaviour
                 Debug.Log("Received: " + responseText);
 
                 // Use JsonUtility to deserialize the JSON string
-                PrologResponse response = JsonUtility.FromJson<PrologResponse>(responseText);
-                Debug.Log("Message from Prolog: " + response.message);
+                PrologIntermediaries response = JsonUtility.FromJson<PrologIntermediaries>(responseText);
+                Debug.Log("Count() intermediaries from Prolog: " + response.intermediaries.Count());
             }
         }
     }
