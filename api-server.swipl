@@ -10,14 +10,14 @@ sample_data(Data) :-
 :- http_handler('/api/data', handle_request, []).
 
 % Handler predicate
-handle_request(Request) :-
-    sample_data(Data),>
+handle_request(_Request) :-
+    sample_data(Data),
     reply_json(Data).
 
 % Define the handler for the path /api/intermediaries
 :- http_handler('/api/intermediaries', handle_request_intermediaries, []).
 
-handle_request_intermediaries(Request) :-
+handle_request_intermediaries(_Request) :-
     findall(_{id:ID,name:Name},intermediary(ID,Name),Intermediaries),
     reply_json(_{intermediaries:Intermediaries}).
 
@@ -28,6 +28,7 @@ start_server(Port) :-
 % ?- start_server(8080).
 
 % Hypothetical structured test data to be serialised over the API
+:-dynamic(intermediary/2).
 intermediary(1,"Test 1").
 intermediary(2,"Test 2").
 intermediary(3,"Test 3").

@@ -20,14 +20,25 @@ public class PrologIntermediaries
 
 public class PrologClient : MonoBehaviour
 {
+    // Prolog API server URL
+    private string apiURL = "http://localhost:8080/api/intermediaries";
+    private float requestInterval = 1.0f; // in seconds
+
     void Start()
     {
-        // Prolog API server URL
-        string url = "http://localhost:8080/api/intermediaries";
-        StartCoroutine(GetData(url));
+        StartCoroutine(RepeatedRequestCoroutine());
     }
 
-    IEnumerator GetData(string uri)
+    IEnumerator RepeatedRequestCoroutine()
+    {
+        while (true) // Infinite loop to keep making requests
+        {
+            yield return StartCoroutine(GetDataAboutIntermediaries(apiURL));
+            yield return new WaitForSeconds(requestInterval);
+        }
+    }
+
+    IEnumerator GetDataAboutIntermediaries(string uri)
     {
         using (UnityWebRequest webRequest = UnityWebRequest.Get(uri))
         {
@@ -42,7 +53,7 @@ public class PrologClient : MonoBehaviour
             {
                 // Parse the response
                 string responseText = webRequest.downloadHandler.text;
-                Debug.Log("Received: " + responseText);
+                //Debug.Log("Received: " + responseText);
 
                 // Use JsonUtility to deserialize the JSON string
                 PrologIntermediaries response = JsonUtility.FromJson<PrologIntermediaries>(responseText);
