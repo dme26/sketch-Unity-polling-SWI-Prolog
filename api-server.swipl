@@ -1,0 +1,20 @@
+:- use_module(library(http/thread_httpd)).
+:- use_module(library(http/http_dispatch)).
+:- use_module(library(http/http_json)).
+
+sample_data(Data) :-
+    Data = _{message:"Hello from Prolog", numbers:[1, 2, 3, 4, 5]}.
+
+% Define the handler for the path /api/data
+:- http_handler('/api/data', handle_request, []).
+
+% Handler predicate
+handle_request(Request) :-
+    sample_data(Data),
+    reply_json(Data).
+
+start_server(Port) :-
+    http_server(http_dispatch, [port(Port)]).
+
+% e.g.
+% ?- start_server(8080).
