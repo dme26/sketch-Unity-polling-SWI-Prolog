@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using System.Collections;
 using System.Linq;
+using TMPro;
 
 // The JsonUtility parsing built into Unity requires a class target
 [System.Serializable]
@@ -23,6 +24,9 @@ public class PrologClient : MonoBehaviour
     // Prolog API server URL
     private string apiURL = "http://localhost:8080/api/intermediaries";
     private float requestInterval = 1.0f; // in seconds
+
+    public TextMeshProUGUI countLabel;
+
 
     void Start()
     {
@@ -57,7 +61,9 @@ public class PrologClient : MonoBehaviour
 
                 // Use JsonUtility to deserialize the JSON string
                 PrologIntermediaries response = JsonUtility.FromJson<PrologIntermediaries>(responseText);
-                Debug.Log("Count() intermediaries from Prolog: " + response.intermediaries.Count());
+		int intermediariesCount = response.intermediaries.Count();
+                Debug.Log("Count() intermediaries from Prolog: " + intermediariesCount);
+                countLabel.text = "Count is " + intermediariesCount;
             }
         }
     }
